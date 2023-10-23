@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>Design Page</title>
+    <link rel="stylesheet" href="hall.css">
+    <script src="hally.js"></script>
+    <style>
+        #elementContainer {
+            width: 300px;
+            height: 300px;
+            background-color: lightgray;
+        }
+
+        .draggable {
+            width: 100px;
+            height: 30px;
+            background-color: lightblue;
+            text-align: center;
+            line-height: 30px;
+            cursor: grab;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h1>Form Designer</h1>
+        <button class="element" name="layout" onclick="layout()"><img src="images/layout.png" alt="layout">
+            <p> Layout</p>
+        </button>
+        <button class="element" name="label" onclick="label()"><img src="images/label.png" alt="label">
+            <p> Label</p>
+        </button>
+        <button class="element"><img src="images/button.png" alt="button">
+            <p> Button</p>
+        </button>
+        <button class="element"><img src="images/text.png" alt="text">
+            <p> Text</p>
+        </button>
+        <button class="element"><img src="images/checkbox.png" alt="checkbox">
+            <p> Check-Box</p>
+        </button>
+        <button class="element"><img src="images/radio.png" alt="radio">
+            <p> Radio</p>
+        </button>
+        <button class="element"><img src="images/dropdown.png" alt="dropdown">
+            <p> Drop-Down</p>
+        </button>
+        <button class="element"><img src="images/image.png" alt="image">
+            <p> Image</p>
+        </button>
+        <button class="element"><img src="images/table.png" alt="table">
+            <p> Table</p>
+        </button>
+        <button class="element"><img src="images/nav-link.png" alt="nav-link">
+            <p> Link</p>
+        </button>
+
+
+    </div>
+    <div id="lform">
+
+    </div>
+    <div class="body">
+        <button>Preview</button>
+        <button style="background-color: teal; color: white;">Publish</button>
+        <br><br>
+        <div id="box"></div>
+
+        <button onclick="clear()">Clear</button>
+        <button style="background-color: teal; color: white;">Save</button>
+    </div>
+    <script>
+        //Make the DIV element draggagle:
+        dragElement(document.getElementById("mydiv"));
+
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById(elmnt.id + "header")) {
+                /* if present, the header is where you move the DIV from:*/
+                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } else {
+                /* otherwise, move the DIV from anywhere inside the DIV:*/
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                /* stop moving when mouse button is released:*/
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+    </script>
+
+    <script>
+        const createButton = document.getElementById("createButton");
+        const elementContainer = document.getElementById("elementContainer");
+
+        createButton.addEventListener("dragstart", function (event) {
+            event.dataTransfer.setData("text/plain", "Create Element");
+        });
+
+        elementContainer.addEventListener("dragover", function (event) {
+            event.preventDefault();
+        });
+
+        elementContainer.addEventListener("drop", function (event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text/plain");
+            if (data === "Create Element") {
+                const newElement = document.createElement("div");
+                newElement.className = "draggable";
+                newElement.textContent = "New Element";
+                newElement.draggable = true;
+                elementContainer.appendChild(newElement);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
